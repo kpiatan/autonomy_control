@@ -10,15 +10,14 @@ import tf
 import numpy as np
 
 window_size = 50
+ang_size = 10
 
 emg_data = np.zeros((window_size,8))
 rms = np.zeros((8))
 std = np.zeros((8))
 var = np.zeros((8))
 
-roll = 0
-pitch = 0
-yaw = 0
+angular_data = np.zeros((ang_size,3))
 
 def emgCallback(data):
     global emg_data
@@ -28,10 +27,11 @@ def emgCallback(data):
     return
 
 def poseCallback(data):
-    global roll, pitch, yaw
-    roll = data.x
-    pitch = data.y
-    yaw = data.z
+    global angular_data
+    angular_data[0][0] = data.x
+    angular_data[0][1] = data.y
+    angular_data[0][2] = data.z
+    angular_data = np.roll(angular_data, 1, axis=0)
 
     return
 
@@ -47,6 +47,7 @@ def myo():
         global emg_data
         global roll, pitch, yaw
         global rms, std, var
+        global angular_data
 
         emg_data_t = np.transpose(emg_data)
         for i in range(0,8):
@@ -54,9 +55,10 @@ def myo():
             std[i] = np.std(emg_data_t[i])
             var[i] = np.var(emg_data_t[i])
 
-        #print 'Valor RMS: ', rms.sum()/rms.size
         pub_rms.publish(rms.sum()/rms.size)
-        #print roll, pitch, yaw
+        #print 'Valor RMS: ', rms.sum()/rms.size
+        media_angdata = np.sum(angular_data,axis=0)/ang_size
+        print np.subtract(angular_data[0],media_angdata)
 
         rate.sleep()
 
