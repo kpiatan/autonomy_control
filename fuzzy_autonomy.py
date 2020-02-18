@@ -17,7 +17,7 @@ def inicializaFuzzy():
     WeldPos = ctrl.Antecedent(np.arange(-1,1,0.005),'WeldPos')
 
     #OUTPUTS
-    LoA = ctrl.Consequent(np.arange(1,4,0.1),'LoA')
+    LoA = ctrl.Consequent(np.arange(0,4,0.1),'LoA')
 
 
     #MEMBERSHIP FUNCTIONS
@@ -50,7 +50,7 @@ def inicializaFuzzy():
     WeldPos['RightHigh'] = fuzz.trimf(WeldPos.universe,[0.500, 1.000, 1.000])
 
     #Level of Autonomy - LoA
-    LoA['Manual'] = fuzz.trimf(LoA.universe,[1.000, 1.000, 2.000])
+    LoA['Manual'] = fuzz.trimf(LoA.universe,[0.000, 1.000, 2.000])
     LoA['Shared'] = fuzz.trimf(LoA.universe,[1.000, 2.000, 3.000])
     LoA['Supervisory'] = fuzz.trimf(LoA.universe,[2.000, 3.000, 4.000])
     LoA['Autonomous'] = fuzz.trimf(LoA.universe,[3.000, 4.000, 4.000])
@@ -109,7 +109,7 @@ def calculateAutonomy(myo,jangular,wpos):
 
     autonomy.input['MyoValue'] = myo
     #autonomy.input['JoyLinear'] = jlinear
-    autonomy.input['JoyAngular'] = jangular
+    autonomy.input['JoyTheta'] = jangular
     autonomy.input['WeldPos'] = wpos
     autonomy.compute()
 

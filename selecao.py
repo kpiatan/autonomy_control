@@ -104,7 +104,7 @@ def talker():
 
     fuzzy_autonomy.inicializaFuzzy()
 
-    pubAutonomy = rospy.Publisher('autonomy_level', Int16, queue_size=10)
+    pubAutonomy = rospy.Publisher('autonomy_level', Float32, queue_size=10)
     pubVel = rospy.Publisher('air1/cmd_vel',Twist,queue_size=10)
     pubHap = rospy.Publisher('myo_raw/vibrate',UInt8,queue_size=10)
     rospy.Subscriber('joy/cmd_vel', Twist, joyvelCallback)
@@ -115,7 +115,7 @@ def talker():
     rospy.Subscriber('joy', Joy, joyCallback)
     rospy.Subscriber('/myo/rms', Float32, rmsCallback)
     rospy.init_node('select_autonomy_node', anonymous=True)
-    rate = rospy.Rate(10) # 10hz
+    rate = rospy.Rate(1000) # hz
 
     while not rospy.is_shutdown():
         data = d
@@ -129,7 +129,7 @@ def talker():
                 erro_x = ajusteTanque.calcularCentroSolda(sinal)
                 #pubErro.publish(erro_x)
                 erro_orientacao =  0
-                print erro_x
+                #print erro_x
                 #erroacumulado = erroacumulado + erro_x*erro_x
                 #print("ErroAcumulado:")
                 #print erroacumulado
@@ -140,8 +140,7 @@ def talker():
                 #print("metrica:")
                 #print erro_por_tempo
 
-                autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,float(theta),erro_x)
-                #autonomy_level=fuzzy_autonomy.calculateAutonomy(30,erro_x,0.000)
+                autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,theta,erro_x)
                 pubAutonomy.publish(autonomy_level)
 
 
