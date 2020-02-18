@@ -38,7 +38,7 @@ def myo():
             std[i] = np.std(emg_data_t[i])
             var[i] = np.var(emg_data_t[i])
 
-        print 'Valor RMS: ', rms.sum()/rms.size
+        #print 'Valor RMS: ', rms.sum()/rms.size
         pub_rms.publish(rms.sum()/rms.size)
         fft0 = fft(emg_data_t[0])
         #print fft0

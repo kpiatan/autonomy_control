@@ -109,8 +109,8 @@ def listener():
     pubFiltro = rospy.Publisher('filtro', PointCloud, queue_size=10)
     pubTanque = rospy.Publisher('tanque', PointCloud, queue_size=10)
     pubPointCloud  = rospy.Publisher('pointLRS36', PointCloud, queue_size=10)
-    pubVel = rospy.Publisher('air1/cmd_vel',Twist,queue_size=10) #alterado 
-    #pubVel = rospy.Publisher('sim/cmd_vel',Twist,queue_size=10)
+    #pubVel = rospy.Publisher('air1/cmd_vel',Twist,queue_size=10) #alterado 
+    pubVel = rospy.Publisher('sim/cmd_vel',Twist,queue_size=10)
     pubErro  = rospy.Publisher('air1/erro', Float32, queue_size=10)
 
     rospy.init_node('processamento_node', anonymous=True)

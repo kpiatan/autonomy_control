@@ -28,6 +28,11 @@ vel_linear = 0
 theta = 0
 rms = 0
 
+joyX = 0
+joyZ = 0
+autX = 0
+autZ = 0
+
 def laserCallback(data):
     global d
     d = data
@@ -57,6 +62,20 @@ def twistCallback(data):
     #print gravidade_x,gravidade_y,gravidade_z
     return
 
+def joyvelCallback(data):
+    global joyX, joyZ
+    joyX = data.linear.x
+    joyZ = data.angular.z
+
+    return
+
+def simvelCallback(data):
+    global autX, autZ
+    autX = data.linear.x
+    autZ = data.angular.z
+
+    return
+    
 def joyCallback(data):
     global vel_linear, theta
     vel_linear = data.axes[1]
@@ -78,11 +97,15 @@ def talker():
     global gravidade_y
     global gravidade_z
     global rms, vel_linear, theta
+    global joyX, joyZ, autX, autZ
 
 
     fuzzy_autonomy.inicializaFuzzy()
 
     pubAutonomy = rospy.Publisher('autonomy_level', Int16, queue_size=10)
+    pubVel = rospy.Publisher('air1/cmd_vel',Twist,queue_size=10)
+    rospy.Subscriber('joy/cmd_vel', Twist, joyvelCallback)
+    rospy.Subscriber('sim/cmd_vel', Twist, simvelCallback)
     rospy.Subscriber('air1/lrs36', LaserScan, laserCallback)
     rospy.Subscriber('air1/odon', Odometry, odonCallback)
     rospy.Subscriber('air1/twist', TwistStamped, twistCallback)
@@ -116,6 +139,19 @@ def talker():
 
                 autonomy=fuzzy_autonomy.calculateAutonomy(rms,vel_linear,theta,erro_x)
                 pubAutonomy.publish(autonomy)
+
+                msg = Twist()
+                if autonomy <= 1:
+                    msg.linear.x = joyX
+                    msg.angular.z = joyZ
+                elif autonomy > 1 and autonomy <= 2:
+                    msg.linear.x = (autonomy-1)*autX + (2-autonomy)*joyX
+                    msg.angular.z = (autonomy-1)*autZ + (2-autonomy)*joyZ
+                elif autonomy > 2:
+                    msg.linear.x = autX
+                    msg.angular.z = autZ
+                
+                pubVel.publish(msg)
 
         rate.sleep()
 
