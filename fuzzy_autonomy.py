@@ -11,8 +11,8 @@ def inicializaFuzzy():
     global autonomy
 
     #INPUTS
-    MyoValue = ctrl.Antecedent(np.arange(20,160,0.005),'MyoValue')
-    JoyLinear = ctrl.Antecedent(np.arange(-1,1,0.005),'JoyLinear')
+    MyoValue = ctrl.Antecedent(np.arange(20,180,0.005),'MyoValue')
+    #JoyLinear = ctrl.Antecedent(np.arange(-1,1,0.005),'JoyLinear')
     JoyAngular = ctrl.Antecedent(np.arange(-2,2,0.005),'JoyTheta')
     WeldPos = ctrl.Antecedent(np.arange(-1,1,0.005),'WeldPos')
 
@@ -22,38 +22,38 @@ def inicializaFuzzy():
 
     #MEMBERSHIP FUNCTIONS
     #myo emg rms mean value
-    MyoValue['Low'] = fuzz.trimf(MyoValue.universe,[20, 20, 40])
-    MyoValue['MedLow'] = fuzz.trimf(MyoValue.universe,[20, 40, 60])
-    MyoValue['Medium'] = fuzz.trimf(MyoValue.universe,[40, 60, 80])
-    MyoValue['MedHigh'] = fuzz.trimf(MyoValue.universe,[60, 80, 100])
-    MyoValue['High'] = fuzz.trimf(MyoValue.universe,[80, 160, 160])
+    MyoValue['Low'] = fuzz.trimf(MyoValue.universe,[20.000, 20.000, 60.000])
+    MyoValue['MedLow'] = fuzz.trimf(MyoValue.universe,[20.000, 60.000, 100.000])
+    MyoValue['Medium'] = fuzz.trimf(MyoValue.universe,[60.000, 100.000, 140.000])
+    MyoValue['MedHigh'] = fuzz.trimf(MyoValue.universe,[100.000, 140.000, 180.000])
+    MyoValue['High'] = fuzz.trimf(MyoValue.universe,[140.000, 180.000, 180.000])
 
     #velocity linear - joystick
-    JoyLinear['NegHigh'] = fuzz.trimf(JoyLinear.universe,[-1, -1, -0.5])    
-    JoyLinear['NegLow'] = fuzz.trimf(JoyLinear.universe,[-0.5, -0.1, 0])
-    JoyLinear['Zero'] = fuzz.trimf(JoyLinear.universe,[-0.1, 0, 0.1])
-    JoyLinear['PosLow'] = fuzz.trimf(JoyLinear.universe,[0, 0.1, 0.5])
-    JoyLinear['PosHigh'] = fuzz.trimf(JoyLinear.universe,[0.5, 1, 1])
+    #JoyLinear['NegHigh'] = fuzz.trimf(JoyLinear.universe,[-1, -1, -0.5])    
+    #JoyLinear['NegLow'] = fuzz.trimf(JoyLinear.universe,[-0.5, -0.1, 0])
+    #JoyLinear['Zero'] = fuzz.trimf(JoyLinear.universe,[-0.1, 0, 0.1])
+    #JoyLinear['PosLow'] = fuzz.trimf(JoyLinear.universe,[0, 0.1, 0.5])
+    #JoyLinear['PosHigh'] = fuzz.trimf(JoyLinear.universe,[0.5, 1, 1])
 
     #velocity angular - joystick
-    JoyAngular['LeftHigh'] = fuzz.trimf(JoyAngular.universe,[-2, -2, -1])    
-    JoyAngular['LeftLow'] = fuzz.trimf(JoyAngular.universe,[-1, -0.5, 0])
-    JoyAngular['Center'] = fuzz.trimf(JoyAngular.universe,[-0.5, 0, 0.5])
-    JoyAngular['RightLow'] = fuzz.trimf(JoyAngular.universe,[0, 0.5, 1])
-    JoyAngular['RightHigh'] = fuzz.trimf(JoyAngular.universe,[1, 2, 2])
+    JoyAngular['LeftHigh'] = fuzz.trimf(JoyAngular.universe,[-2.000, -2.000, -1.000])    
+    JoyAngular['LeftLow'] = fuzz.trimf(JoyAngular.universe,[-1.000, -0.500, 0.000])
+    JoyAngular['Center'] = fuzz.trimf(JoyAngular.universe,[-0.500, 0.000, 0.500])
+    JoyAngular['RightLow'] = fuzz.trimf(JoyAngular.universe,[0.000, 0.500, 1.000])
+    JoyAngular['RightHigh'] = fuzz.trimf(JoyAngular.universe,[1.000, 2.000, 2.000])
 
     #weld position
-    WeldPos['LeftHigh'] = fuzz.trimf(WeldPos.universe,[-1, -1, -0.5])    
-    WeldPos['LeftLow'] = fuzz.trimf(WeldPos.universe,[-0.5, -0.1, 0])
-    WeldPos['Center'] = fuzz.trimf(WeldPos.universe,[-0.5, 0, 0.5])
-    WeldPos['RightLow'] = fuzz.trimf(WeldPos.universe,[0, 0.1, 0.5])
-    WeldPos['RightHigh'] = fuzz.trimf(WeldPos.universe,[0.5, 1, 1])
+    WeldPos['LeftHigh'] = fuzz.trimf(WeldPos.universe,[-1.000, -1.000, -0.500])    
+    WeldPos['LeftLow'] = fuzz.trimf(WeldPos.universe,[-0.500, -0.100, 0.000])
+    WeldPos['Center'] = fuzz.trimf(WeldPos.universe,[-0.500, 0.000, 0.500])
+    WeldPos['RightLow'] = fuzz.trimf(WeldPos.universe,[0.000, 0.100, 0.500])
+    WeldPos['RightHigh'] = fuzz.trimf(WeldPos.universe,[0.500, 1.000, 1.000])
 
     #Level of Autonomy - LoA
-    LoA['Manual'] = fuzz.trimf(LoA.universe,[1, 1, 2])
-    LoA['Shared'] = fuzz.trimf(LoA.universe,[1, 2, 3])
-    LoA['Supervisory'] = fuzz.trimf(LoA.universe,[2, 3, 4])
-    LoA['Autonomous'] = fuzz.trimf(LoA.universe,[3, 4, 4])
+    LoA['Manual'] = fuzz.trimf(LoA.universe,[1.000, 1.000, 2.000])
+    LoA['Shared'] = fuzz.trimf(LoA.universe,[1.000, 2.000, 3.000])
+    LoA['Supervisory'] = fuzz.trimf(LoA.universe,[2.000, 3.000, 4.000])
+    LoA['Autonomous'] = fuzz.trimf(LoA.universe,[3.000, 4.000, 4.000])
 
 
     #RULES
@@ -104,11 +104,11 @@ def inicializaFuzzy():
 
     return
 
-def calculateAutonomy(myo,jlinear,jangular,wpos):
+def calculateAutonomy(myo,jangular,wpos):
     global autonomy
 
     autonomy.input['MyoValue'] = myo
-    autonomy.input['JoyLinear'] = jlinear
+    #autonomy.input['JoyLinear'] = jlinear
     autonomy.input['JoyAngular'] = jangular
     autonomy.input['WeldPos'] = wpos
     autonomy.compute()

@@ -3,7 +3,7 @@ import rospy
 from sensor_msgs.msg import LaserScan, PointCloud
 from geometry_msgs.msg import Twist, Quaternion,TwistStamped
 from nav_msgs.msg import Odometry
-from std_msgs.msg import Float64,Float32, Int16
+from std_msgs.msg import Float64,Float32, Int16, UInt8
 from sensor_msgs.msg import Joy
 import tf
 
@@ -24,14 +24,16 @@ gravidade_x = 0
 gravidade_y = 0
 gravidade_z = 1
 
-vel_linear = 0
-theta = 0
-rms = 0
+vel_linear = 0 # vel_linear lida do joystick
+theta = 0 # vel_angular lida do joystick
+rms = 0 # valor rms da myo
 
-joyX = 0
-joyZ = 0
-autX = 0
-autZ = 0
+joyX = 0 #vel linear lida do topico cmd_vel publicado pelo joystick
+joyZ = 0 #vel angular lida do topico cmd_vel publicado pelo joystick
+autX = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
+autZ = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
+
+autonomy_level = 1
 
 def laserCallback(data):
     global d
@@ -98,12 +100,13 @@ def talker():
     global gravidade_z
     global rms, vel_linear, theta
     global joyX, joyZ, autX, autZ
-
+    global autonomy_level
 
     fuzzy_autonomy.inicializaFuzzy()
 
     pubAutonomy = rospy.Publisher('autonomy_level', Int16, queue_size=10)
     pubVel = rospy.Publisher('air1/cmd_vel',Twist,queue_size=10)
+    pubHap = rospy.Publisher('myo_raw/vibrate',UInt8,queue_size=10)
     rospy.Subscriber('joy/cmd_vel', Twist, joyvelCallback)
     rospy.Subscriber('sim/cmd_vel', Twist, simvelCallback)
     rospy.Subscriber('air1/lrs36', LaserScan, laserCallback)
@@ -124,8 +127,9 @@ def talker():
             if tanque != -1:
                 sinal = ajusteTanque.determinarSinal(scan,tanque)
                 erro_x = ajusteTanque.calcularCentroSolda(sinal)
-                pubErro.publish(erro_x)
+                #pubErro.publish(erro_x)
                 erro_orientacao =  0
+                print erro_x
                 #erroacumulado = erroacumulado + erro_x*erro_x
                 #print("ErroAcumulado:")
                 #print erroacumulado
@@ -136,22 +140,25 @@ def talker():
                 #print("metrica:")
                 #print erro_por_tempo
 
+                autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,float(theta),erro_x)
+                #autonomy_level=fuzzy_autonomy.calculateAutonomy(30,erro_x,0.000)
+                pubAutonomy.publish(autonomy_level)
 
-                autonomy=fuzzy_autonomy.calculateAutonomy(rms,vel_linear,theta,erro_x)
-                pubAutonomy.publish(autonomy)
 
-                msg = Twist()
-                if autonomy <= 1:
-                    msg.linear.x = joyX
-                    msg.angular.z = joyZ
-                elif autonomy > 1 and autonomy <= 2:
-                    msg.linear.x = (autonomy-1)*autX + (2-autonomy)*joyX
-                    msg.angular.z = (autonomy-1)*autZ + (2-autonomy)*joyZ
-                elif autonomy > 2:
-                    msg.linear.x = autX
-                    msg.angular.z = autZ
+        msg_cmd_vel = Twist()
+        if autonomy_level <= 1:
+            msg_cmd_vel.linear.x = joyX
+            msg_cmd_vel.angular.z = joyZ
+        elif autonomy_level > 1 and autonomy_level <= 2:
+            msg_cmd_vel.linear.x = (autonomy_level-1)*autX + (2-autonomy_level)*joyX
+            msg_cmd_vel.angular.z = (autonomy_level-1)*autZ + (2-autonomy_level)*joyZ
+        elif autonomy_level > 2:
+            msg_cmd_vel.linear.x = autX
+            msg_cmd_vel.angular.z = autZ
                 
-                pubVel.publish(msg)
+        pubVel.publish(msg_cmd_vel)
+
+        #pubHap.publish(1)
 
         rate.sleep()
 
