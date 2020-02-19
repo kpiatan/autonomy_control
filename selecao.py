@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import rospy
 from sensor_msgs.msg import LaserScan, PointCloud
-from geometry_msgs.msg import Twist, Quaternion,TwistStamped
+from geometry_msgs.msg import Twist, Quaternion,TwistStamped, Vector3
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Float64,Float32, Int16, UInt8
 from sensor_msgs.msg import Joy
@@ -27,6 +27,9 @@ gravidade_z = 1
 vel_linear = 0 # vel_linear lida do joystick
 theta = 0 # vel_angular lida do joystick
 rms = 0 # valor rms da myo
+d_roll = 0 #variacao dentro de uma janela de medicoes dos angulos da myo
+d_pitch = 0
+d_yaw = 0
 
 joyX = 0 #vel linear lida do topico cmd_vel publicado pelo joystick
 joyZ = 0 #vel angular lida do topico cmd_vel publicado pelo joystick
@@ -90,6 +93,14 @@ def rmsCallback(data):
     rms = data.data
 
     return
+
+def dangCallback(data):
+    global d_roll, d_pitch, d_yaw
+    d_roll = data.x
+    d_pitch = data.y
+    d_yaw = data.z
+
+    return
     
 
 def talker():
@@ -101,6 +112,7 @@ def talker():
     global rms, vel_linear, theta
     global joyX, joyZ, autX, autZ
     global autonomy_level
+    global d_roll, d_pitch, d_yaw
 
     fuzzy_autonomy.inicializaFuzzy()
 
@@ -114,6 +126,7 @@ def talker():
     rospy.Subscriber('air1/twist', TwistStamped, twistCallback)
     rospy.Subscriber('joy', Joy, joyCallback)
     rospy.Subscriber('/myo/rms', Float32, rmsCallback)
+    rospy.Subscriber('/myo/delta_ang', Vector3, dangCallback)
     rospy.init_node('select_autonomy_node', anonymous=True)
     rate = rospy.Rate(1000) # hz
 
@@ -140,25 +153,43 @@ def talker():
                 #print("metrica:")
                 #print erro_por_tempo
 
-                autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,theta,erro_x)
+                autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,theta,erro_x, d_roll)
                 pubAutonomy.publish(autonomy_level)
 
 
         msg_cmd_vel = Twist()
-        if autonomy_level <= 1:
-            msg_cmd_vel.linear.x = joyX
+
+        joyX = joyX - d_pitch*0.3 # um peso dos angulos do controle no valor da velocidade, pitch eh negativo
+        joyZ = joyZ - d_roll*0.3
+
+        if autonomy_level <= 1: # modo manual
+            msg_cmd_vel.linear.x = joyX # velocidade totalmente pelo controle
             msg_cmd_vel.angular.z = joyZ
-        elif autonomy_level > 1 and autonomy_level <= 2:
-            msg_cmd_vel.linear.x = (autonomy_level-1)*autX + (2-autonomy_level)*joyX
+        elif autonomy_level > 1 and autonomy_level <= 2: # modo compartilhado
+            msg_cmd_vel.linear.x = (autonomy_level-1)*autX + (2-autonomy_level)*joyX # uma parte da velocidade eh do controle e outra do modo autonomo
             msg_cmd_vel.angular.z = (autonomy_level-1)*autZ + (2-autonomy_level)*joyZ
-        elif autonomy_level > 2:
+        elif autonomy_level > 2: # modos supervisorio e autonomo
             msg_cmd_vel.linear.x = autX
             msg_cmd_vel.angular.z = autZ
-                
+
+        #limitadores de velocidade
+        if msg_cmd_vel.linear.x > 0.5:
+            msg_cmd_vel.linear.x = 0.5
+        if msg_cmd_vel.angular.z > 1.5:
+            msg_cmd_vel.angular.z = 1.5
+
         pubVel.publish(msg_cmd_vel)
 
-        #pubHap.publish(1)
-
+        # vibracao de acordo com o nivel de autonomia
+        if autonomy_level <= 1:
+            pubHap.publish(0)
+        elif autonomy_level > 1 and autonomy_level <= 2:
+            pubHap.publish(1)
+        elif autonomy_level > 2 and autonomy_level <= 3:
+            pubHap.publish(2)
+        elif autonomy_level > 3:
+            pubHap.publish(3)
+        
         rate.sleep()
 
 if __name__ == '__main__':
