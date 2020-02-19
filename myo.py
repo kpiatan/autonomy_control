@@ -64,7 +64,7 @@ def myo():
         d_yaw = diferenca[0]
         d_pitch = diferenca[1]
         d_roll = diferenca[2]
-        print  d_roll, d_pitch, d_yaw
+        #print  d_roll, d_pitch, d_yaw
         pub_dang.publish(d_roll, d_pitch, d_yaw)
         rate.sleep()
 

@@ -128,7 +128,7 @@ def talker():
     rospy.Subscriber('/myo/rms', Float32, rmsCallback)
     rospy.Subscriber('/myo/delta_ang', Vector3, dangCallback)
     rospy.init_node('select_autonomy_node', anonymous=True)
-    rate = rospy.Rate(1000) # hz
+    rate = rospy.Rate(100) # hz
 
     while not rospy.is_shutdown():
         data = d
@@ -160,7 +160,7 @@ def talker():
         msg_cmd_vel = Twist()
 
         joyX = joyX - d_pitch*0.3 # um peso dos angulos do controle no valor da velocidade, pitch eh negativo
-        joyZ = joyZ - d_roll*0.3
+        joyZ = joyZ - d_roll*0.3 
 
         if autonomy_level <= 1: # modo manual
             msg_cmd_vel.linear.x = joyX # velocidade totalmente pelo controle
