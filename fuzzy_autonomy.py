@@ -59,23 +59,23 @@ def inicializaFuzzy():
 
     #velocity angular - joystick
     JoyAngular['LeftHigh'] = fuzz.trimf(JoyAngular.universe,[-2.000, -2.000, -1.000])    
-    JoyAngular['LeftLow'] = fuzz.trimf(JoyAngular.universe,[-1.000, -0.500, 0.000])
-    JoyAngular['Center'] = fuzz.trimf(JoyAngular.universe,[-0.500, 0.000, 0.500])
-    JoyAngular['RightLow'] = fuzz.trimf(JoyAngular.universe,[0.000, 0.500, 1.000])
+    JoyAngular['LeftLow'] = fuzz.trimf(JoyAngular.universe,[-2.000, -1.000, 0.000])
+    JoyAngular['Center'] = fuzz.trimf(JoyAngular.universe,[-1.000, 0.000, 1.000])
+    JoyAngular['RightLow'] = fuzz.trimf(JoyAngular.universe,[0.000, 1.000, 2.000])
     JoyAngular['RightHigh'] = fuzz.trimf(JoyAngular.universe,[1.000, 2.000, 2.000])
 
     #weld position
     WeldPos['LeftHigh'] = fuzz.trimf(WeldPos.universe,[-1.000, -1.000, -0.500])    
-    WeldPos['LeftLow'] = fuzz.trimf(WeldPos.universe,[-0.500, -0.100, 0.000])
+    WeldPos['LeftLow'] = fuzz.trimf(WeldPos.universe,[-1.000, -0.500, 0.000])
     WeldPos['Center'] = fuzz.trimf(WeldPos.universe,[-0.500, 0.000, 0.500])
-    WeldPos['RightLow'] = fuzz.trimf(WeldPos.universe,[0.000, 0.100, 0.500])
+    WeldPos['RightLow'] = fuzz.trimf(WeldPos.universe,[0.000, 0.500, 1.000])
     WeldPos['RightHigh'] = fuzz.trimf(WeldPos.universe,[0.500, 1.000, 1.000])
 
     #Level of Autonomy - LoA
-    LoA['Manual'] = fuzz.trimf(LoA.universe,[0.000, 1.000, 2.000])
-    LoA['Shared'] = fuzz.trimf(LoA.universe,[1.000, 2.000, 3.000])
-    LoA['Supervisory'] = fuzz.trimf(LoA.universe,[2.000, 3.000, 4.000])
-    LoA['Autonomous'] = fuzz.trimf(LoA.universe,[3.000, 4.000, 4.000])
+    LoA['Manual'] = fuzz.trapmf(LoA.universe,[0.000, 0.000, 0.500, 1.500])
+    LoA['Shared'] = fuzz.trimf(LoA.universe,[0.500, 1.500, 2.500])
+    LoA['Supervisory'] = fuzz.trimf(LoA.universe,[1.500, 2.500, 3.500])
+    LoA['Autonomous'] = fuzz.trapmf(LoA.universe,[2.500, 3.500, 4.000, 4.000])
 
 
     #RULES
