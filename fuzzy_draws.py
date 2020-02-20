@@ -9,7 +9,7 @@ from mpl_toolkits.mplot3d import Axes3D  # Required for 3D plotting
 #INPUTS
 MyoValue = ctrl.Antecedent(np.arange(20,180,0.005),'MyoValue')
 MyoRoll = ctrl.Antecedent(np.arange(-0.5,0.5,0.005),'MyoRoll')
-JoyAngular = ctrl.Antecedent(np.arange(-2,2,0.005),'JoyAngular')
+JoyAngular = ctrl.Antecedent(np.arange(-5,5,0.005),'JoyAngular')
 WeldPos = ctrl.Antecedent(np.arange(-1,1,0.005),'WeldPos')
 
 #OUTPUTS
@@ -31,11 +31,11 @@ MyoRoll['CWLow'] = fuzz.trimf(MyoRoll.universe,[0.000, 0.250, 0.500])
 MyoRoll['CWHigh'] = fuzz.trimf(MyoRoll.universe,[0.250, 0.500, 0.500])
 
 #velocity angular - joystick
-JoyAngular['LeftHigh'] = fuzz.trimf(JoyAngular.universe,[-2.000, -2.000, -1.000])    
+JoyAngular['LeftHigh'] = fuzz.trapmf(JoyAngular.universe,[-5.000, -5.000, -2.000, -1.000])    
 JoyAngular['LeftLow'] = fuzz.trimf(JoyAngular.universe,[-2.000, -1.000, 0.000])
 JoyAngular['Center'] = fuzz.trimf(JoyAngular.universe,[-1.000, 0.000, 1.000])
 JoyAngular['RightLow'] = fuzz.trimf(JoyAngular.universe,[0.000, 1.000, 2.000])
-JoyAngular['RightHigh'] = fuzz.trimf(JoyAngular.universe,[1.000, 2.000, 2.000])
+JoyAngular['RightHigh'] = fuzz.trapmf(JoyAngular.universe,[1.000, 2.000, 5.000, 5.000])
 
 #weld position
 WeldPos['LeftHigh'] = fuzz.trimf(WeldPos.universe,[-1.000, -1.000, -0.500])    
@@ -145,9 +145,9 @@ def calculateAutonomy(myo_rms,joy_angular,weld_pos, myo_roll):
     global autonomy
 
     autonomy.input['MyoValue'] = myo_rms
-    autonomy.input['MyoRoll'] = myo_roll
     autonomy.input['JoyAngular'] = joy_angular
     autonomy.input['WeldPos'] = weld_pos
+    autonomy.input['MyoRoll'] = myo_roll
     autonomy.compute()
 
     #para visualizar dados manualmente
@@ -159,4 +159,4 @@ def calculateAutonomy(myo_rms,joy_angular,weld_pos, myo_roll):
 
     return autonomy_level
 
-calculateAutonomy(20,2, 1, 0.5)
+calculateAutonomy(50,-0.5, -1, 0)
