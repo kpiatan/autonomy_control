@@ -4,7 +4,7 @@ import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import numpy as np
 import matplotlib.pyplot as plt
-import time
+from mpl_toolkits.mplot3d import Axes3D  # Required for 3D plotting
 
 #INPUTS
 MyoValue = ctrl.Antecedent(np.arange(20,180,0.005),'MyoValue')
@@ -50,13 +50,13 @@ LoA['Shared'] = fuzz.trimf(LoA.universe,[0.500, 1.500, 2.500])
 LoA['Supervisory'] = fuzz.trimf(LoA.universe,[1.500, 2.500, 3.500])
 LoA['Autonomous'] = fuzz.trapmf(LoA.universe,[2.500, 3.500, 4.000, 4.000])
 
-MyoValue.view()
-MyoRoll.view()
-JoyAngular.view()
-WeldPos.view()
-LoA.view()
+#MyoValue.view()
+#MyoRoll.view()
+#JoyAngular.view()
+#WeldPos.view()
+#LoA.view()
 
-plt.show()
+#plt.show()
 
 
 #RULES
@@ -150,6 +150,13 @@ def calculateAutonomy(myo_rms,joy_angular,weld_pos, myo_roll):
     autonomy.input['WeldPos'] = weld_pos
     autonomy.compute()
 
+    #para visualizar dados manualmente
+    print autonomy.output['LoA']
+    LoA.view(sim=autonomy)
+    plt.show()
+
     autonomy_level = autonomy.output['LoA']
 
     return autonomy_level
+
+calculateAutonomy(20,2, 1, 0.5)
