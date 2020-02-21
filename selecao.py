@@ -37,6 +37,8 @@ autX = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
 autZ = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
 
 autonomy_level = 1
+autonomy_level_int = 1
+autonomy_level_int_ant = 1
 
 def laserCallback(data):
     global d
@@ -111,7 +113,7 @@ def talker():
     global gravidade_z
     global rms, vel_linear, theta
     global joyX, joyZ, autX, autZ
-    global autonomy_level
+    global autonomy_level, autonomy_level_int, autonomy_level_int_ant
     global d_roll, d_pitch, d_yaw
 
     fuzzy_autonomy.inicializaFuzzy()
@@ -181,16 +183,25 @@ def talker():
 
         pubVel.publish(msg_cmd_vel)
 
+        autonomy_level_int_ant = autonomy_level_int
+
         # vibracao de acordo com o nivel de autonomia
         if autonomy_level <= 1:
-            pubHap.publish(0)
+            autonomy_level_int = 1
         elif autonomy_level > 1 and autonomy_level <= 2:
-            pubHap.publish(1)
+            autonomy_level_int = 2
         elif autonomy_level > 2 and autonomy_level <= 3:
-            pubHap.publish(2)
+            autonomy_level_int = 3
         elif autonomy_level > 3:
-            pubHap.publish(3)
-        
+            autonomy_level_int = 4
+
+        if autonomy_level_int > autonomy_level_int_ant:
+            pubHap.publish(2)
+        elif autonomy_level_int < autonomy_level_int_ant:
+            pubHap.publish(1)
+        else:
+            pubHap.publish(0)
+
         rate.sleep()
 
 if __name__ == '__main__':
