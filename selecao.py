@@ -154,13 +154,14 @@ def talker():
                 #print erro_por_tempo
 
                 autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,theta,erro_x, d_roll)
+                #autonomy_level = 1 #teste
                 pubAutonomy.publish(autonomy_level)
 
 
         msg_cmd_vel = Twist()
 
-        joyX = joyX - d_pitch*0.3 # um peso dos angulos do controle no valor da velocidade, pitch eh negativo
-        joyZ = joyZ - d_roll*0.3 
+        joyX = joyX - d_pitch*0.1 # um peso dos angulos do controle no valor da velocidade, pitch para cima positivo
+        joyZ = joyZ + d_roll*0.5  # roll sentido horario positivo
 
         if autonomy_level <= 1: # modo manual
             msg_cmd_vel.linear.x = joyX # velocidade totalmente pelo controle
@@ -173,10 +174,10 @@ def talker():
             msg_cmd_vel.angular.z = autZ
 
         #limitadores de velocidade
-        if msg_cmd_vel.linear.x > 0.5:
-            msg_cmd_vel.linear.x = 0.5
-        if msg_cmd_vel.angular.z > 1.5:
-            msg_cmd_vel.angular.z = 1.5
+        if msg_cmd_vel.linear.x > 1.0:
+            msg_cmd_vel.linear.x = 1.0
+        if msg_cmd_vel.angular.z > 2.5:
+            msg_cmd_vel.angular.z = 2.5
 
         pubVel.publish(msg_cmd_vel)
 

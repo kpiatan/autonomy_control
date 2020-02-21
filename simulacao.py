@@ -149,15 +149,15 @@ def listener():
                 erro_x = ajusteTanque.calcularCentroSolda(sinal)
                 pubErro.publish(erro_x)
                 erro_orientacao =  0
-                erroacumulado = erroacumulado + erro_x*erro_x
-                print("ErroAcumulado:")
-                print erroacumulado
-                elapsed_time = time.time() - start_time
-                print("Tempo:")
-                print elapsed_time
-                erro_por_tempo = math.sqrt(erroacumulado)/elapsed_time
-                print("metrica:")
-                print erro_por_tempo
+                #erroacumulado = erroacumulado + erro_x*erro_x
+                #print("ErroAcumulado:")
+                #print erroacumulado
+                #elapsed_time = time.time() - start_time
+                #print("Tempo:")
+                #print elapsed_time
+                #erro_por_tempo = math.sqrt(erroacumulado)/elapsed_time
+                #print("metrica:")
+                #print erro_por_tempo
 
 
                 vang,vlin=fuzzy.calculaVelocidade(erro_x,erro_orientacao,3,gravidade_x,gravidade_y,gravidade_z)
