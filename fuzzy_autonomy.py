@@ -12,11 +12,11 @@ def inicializaFuzzy():
 
     #INPUTS
     MyoValue = ctrl.Antecedent(np.arange(20,180,0.005),'MyoValue')
-    MyoRoll = ctrl.Antecedent(np.arange(-0.5,0.5,0.005),'MyoRoll')
+    MyoRoll = ctrl.Antecedent(np.arange(-2,2,0.005),'MyoRoll')
     #MyoPitch = ctrl.Antecedent(np.arange(-0.5,0.5,0.005),'MyoPitch')
     #MyoYaw = ctrl.Antecedent(np.arange(-0.5,0.5,0.005),'MyoYaw')
     #JoyLinear = ctrl.Antecedent(np.arange(-1,1,0.005),'JoyLinear')
-    JoyAngular = ctrl.Antecedent(np.arange(-2,2,0.005),'JoyAngular')
+    JoyAngular = ctrl.Antecedent(np.arange(-5,5,0.005),'JoyAngular')
     WeldPos = ctrl.Antecedent(np.arange(-1,1,0.005),'WeldPos')
 
     #OUTPUTS
@@ -32,11 +32,11 @@ def inicializaFuzzy():
     MyoValue['High'] = fuzz.trimf(MyoValue.universe,[140.000, 180.000, 180.000])
 
     #myo roll
-    MyoRoll['ACWHigh'] = fuzz.trimf(MyoRoll.universe,[-0.500, -0.500, -0.250])
+    MyoRoll['ACWHigh'] = fuzz.trapmf(MyoRoll.universe,[-2.000, -2.000, -0.500, -0.250])
     MyoRoll['ACWLow'] = fuzz.trimf(MyoRoll.universe,[-0.500, -0.250, 0.000])
     MyoRoll['Zero'] = fuzz.trimf(MyoRoll.universe,[-0.250, 0.000, 0.250])
     MyoRoll['CWLow'] = fuzz.trimf(MyoRoll.universe,[0.000, 0.250, 0.500])
-    MyoRoll['CWHigh'] = fuzz.trimf(MyoRoll.universe,[0.250, 0.500, 0.500])
+    MyoRoll['CWHigh'] = fuzz.trapmf(MyoRoll.universe,[0.250, 0.500, 2.000, 2.000])
 
     #MyoPitch['DownHigh'] = fuzz.trimf(MyoPitch.universe,[-0.500, -0.500, -0.250])
     #MyoPitch['DownLow'] = fuzz.trimf(MyoPitch.universe,[-0.500, -0.250, 0.000])
@@ -58,11 +58,11 @@ def inicializaFuzzy():
     #JoyLinear['PosHigh'] = fuzz.trimf(JoyLinear.universe,[0.5, 1, 1])
 
     #velocity angular - joystick
-    JoyAngular['LeftHigh'] = fuzz.trimf(JoyAngular.universe,[-2.000, -2.000, -1.000])    
+    JoyAngular['LeftHigh'] = fuzz.trapmf(JoyAngular.universe,[-5.000, -5.000, -2.000, -1.000])
     JoyAngular['LeftLow'] = fuzz.trimf(JoyAngular.universe,[-2.000, -1.000, 0.000])
     JoyAngular['Center'] = fuzz.trimf(JoyAngular.universe,[-1.000, 0.000, 1.000])
     JoyAngular['RightLow'] = fuzz.trimf(JoyAngular.universe,[0.000, 1.000, 2.000])
-    JoyAngular['RightHigh'] = fuzz.trimf(JoyAngular.universe,[1.000, 2.000, 2.000])
+    JoyAngular['RightHigh'] = fuzz.trapmf(JoyAngular.universe,[1.000, 2.000, 5.000, 5.000])
 
     #weld position
     WeldPos['LeftHigh'] = fuzz.trimf(WeldPos.universe,[-1.000, -1.000, -0.500])    
