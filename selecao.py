@@ -162,8 +162,10 @@ def talker():
 
         msg_cmd_vel = Twist()
 
-        joyX = joyX - d_pitch*0.1 # um peso dos angulos do controle no valor da velocidade, pitch para cima positivo
-        joyZ = joyZ + d_roll*0.5  # roll sentido horario positivo
+        if joyX != 0:
+            joyX = joyX - d_pitch*0.1 # um peso dos angulos do controle no valor da velocidade, pitch para cima positivo
+        if joyZ != 0:
+            joyZ = joyZ + d_roll*0.5  # roll sentido horario positivo
 
         if autonomy_level <= 1: # modo manual
             msg_cmd_vel.linear.x = joyX # velocidade totalmente pelo controle
