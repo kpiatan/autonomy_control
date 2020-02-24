@@ -50,13 +50,13 @@ LoA['Shared'] = fuzz.trimf(LoA.universe,[0.500, 1.500, 2.500])
 LoA['Supervisory'] = fuzz.trimf(LoA.universe,[1.500, 2.500, 3.500])
 LoA['Autonomous'] = fuzz.trapmf(LoA.universe,[2.500, 3.500, 4.000, 4.000])
 
-MyoValue.view()
-MyoRoll.view()
-JoyAngular.view()
-WeldPos.view()
-LoA.view()
+#MyoValue.view()
+#MyoRoll.view()
+#JoyAngular.view()
+#WeldPos.view()
+#LoA.view()
 
-plt.show()
+#plt.show()
 
 
 #RULES
@@ -124,10 +124,10 @@ rule48 = ctrl.Rule(MyoRoll['CWHigh'] & WeldPos['Center'],LoA['Supervisory'])
 rule49 = ctrl.Rule(MyoRoll['CWHigh'] & WeldPos['RightLow'],LoA['Shared'])
 rule50 = ctrl.Rule(MyoRoll['CWHigh'] & WeldPos['RightHigh'],LoA['Manual'])
 
-rule51 = ctrl.Rule(MyoValue['Low'],LoA['Manual'])
-rule52 = ctrl.Rule(MyoValue['MedLow'],LoA['Manual'])
-rule53 = ctrl.Rule(MyoValue['Medium'],LoA['Shared'])
-rule54 = ctrl.Rule(MyoValue['MedHigh'],LoA['Supervisory'])
+#rule51 = ctrl.Rule(MyoValue['Low'],LoA['Manual'])
+#rule52 = ctrl.Rule(MyoValue['MedLow'],LoA['Manual'])
+#rule53 = ctrl.Rule(MyoValue['Medium'],LoA['Shared'])
+rule54 = ctrl.Rule(MyoValue['MedHigh'],LoA['Autonomous'])
 rule55 = ctrl.Rule(MyoValue['High'],LoA['Autonomous'])
 
 
@@ -137,7 +137,7 @@ autonomy_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6, ru
                                     rule21, rule22, rule23, rule24, rule25, rule26, rule27, rule28, rule29, rule30,
                                     rule31, rule32, rule33, rule34, rule35, rule36, rule37, rule38, rule39, rule40,
                                     rule41, rule42, rule43, rule44, rule45, rule46, rule47, rule48, rule49, rule50,
-                                    rule51, rule52, rule53, rule54, rule55
+                                    rule53, rule54, rule55
                                     ])
 autonomy = ctrl.ControlSystemSimulation(autonomy_ctrl)
 
@@ -159,4 +159,4 @@ def calculateAutonomy(myo_rms,joy_angular,weld_pos, myo_roll):
 
     return autonomy_level
 
-calculateAutonomy(80,0.5, -1, 0.3)
+calculateAutonomy(50,-4.7, 0.931, -1.92)
