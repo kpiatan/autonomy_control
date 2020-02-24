@@ -137,7 +137,7 @@ autonomy_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6, ru
                                     rule21, rule22, rule23, rule24, rule25, rule26, rule27, rule28, rule29, rule30,
                                     rule31, rule32, rule33, rule34, rule35, rule36, rule37, rule38, rule39, rule40,
                                     rule41, rule42, rule43, rule44, rule45, rule46, rule47, rule48, rule49, rule50,
-                                    rule53, rule54, rule55
+                                    rule54, rule55
                                     ])
 autonomy = ctrl.ControlSystemSimulation(autonomy_ctrl)
 
