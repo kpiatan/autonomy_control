@@ -165,7 +165,7 @@ def talker():
         if joyX != 0:
             joyX = joyX - d_pitch*0.1 # um peso dos angulos do controle no valor da velocidade, pitch para cima positivo
         if joyZ != 0:
-            joyZ = joyZ + d_roll*0.5  # roll sentido horario positivo
+            joyZ = joyZ + d_roll*0.1  # roll sentido horario positivo
 
         if autonomy_level <= 1: # modo manual
             msg_cmd_vel.linear.x = joyX # velocidade totalmente pelo controle
@@ -173,10 +173,10 @@ def talker():
         elif autonomy_level > 1 and autonomy_level <= 2: # modo compartilhado
             msg_cmd_vel.linear.x = (autonomy_level-1)*autX + (2-autonomy_level)*joyX # uma parte da velocidade eh do controle e outra do modo autonomo
             msg_cmd_vel.angular.z = (autonomy_level-1)*autZ + (2-autonomy_level)*joyZ
-        elif autonomy_level > 2 and autonomy_level <= 3: # modos supervisorio e autonomo
+        elif autonomy_level > 2 and autonomy_level <= 3: # modo supervisorio
             msg_cmd_vel.linear.x = joyX
             msg_cmd_vel.angular.z = autZ
-        elif autonomy_level > 3:
+        elif autonomy_level > 3: # modo autonomo
             msg_cmd_vel.linear.x = autX
             msg_cmd_vel.angular.z = autZ
 
