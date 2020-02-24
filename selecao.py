@@ -173,7 +173,10 @@ def talker():
         elif autonomy_level > 1 and autonomy_level <= 2: # modo compartilhado
             msg_cmd_vel.linear.x = (autonomy_level-1)*autX + (2-autonomy_level)*joyX # uma parte da velocidade eh do controle e outra do modo autonomo
             msg_cmd_vel.angular.z = (autonomy_level-1)*autZ + (2-autonomy_level)*joyZ
-        elif autonomy_level > 2: # modos supervisorio e autonomo
+        elif autonomy_level > 2 and autonomy_level <= 3: # modos supervisorio e autonomo
+            msg_cmd_vel.linear.x = joyX
+            msg_cmd_vel.angular.z = autZ
+        elif autonomy_level > 3:
             msg_cmd_vel.linear.x = autX
             msg_cmd_vel.angular.z = autZ
 

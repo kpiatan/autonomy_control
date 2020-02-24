@@ -181,8 +181,8 @@ def listener():
                 ladoRotacao = lado[index_sequence]
                 print("estado:")
                 print estado
-                print("autonomylevel:")
-                print autonomy
+                #print("autonomylevel:")
+                #print autonomy
 
                 if gravidade_z > 0.4:
                     gPos = 0
