@@ -50,13 +50,13 @@ LoA['Compartilhado'] = fuzz.trimf(LoA.universe,[0.500, 1.500, 2.500])
 LoA['Supervisorio'] = fuzz.trimf(LoA.universe,[1.500, 2.500, 3.500])
 LoA['Autonomo'] = fuzz.trapmf(LoA.universe,[2.500, 3.500, 4.000, 4.000])
 
-MyoRMS.view()
-MyoRoll.view()
-JoyAngular.view()
-WeldPos.view()
-LoA.view()
+#MyoRMS.view()
+#MyoRoll.view()
+#JoyAngular.view()
+#WeldPos.view()
+#LoA.view()
 
-plt.show()
+#plt.show()
 
 
 #RULES
@@ -127,7 +127,7 @@ rule50 = ctrl.Rule(MyoRoll['HorarioAlto'] & WeldPos['DireitaAlto'],LoA['Manual']
 #rule51 = ctrl.Rule(MyoRMS['Baixo'],LoA['Manual'])
 #rule52 = ctrl.Rule(MyoRMS['MedBaixo'],LoA['Manual'])
 #rule53 = ctrl.Rule(MyoRMS['Medio'],LoA['Compartilhado'])
-rule54 = ctrl.Rule(MyoRMS['MedAlto'],LoA['Autonomo'])
+rule54 = ctrl.Rule(MyoRMS['MedAlto'],LoA['Supervisorio'])
 rule55 = ctrl.Rule(MyoRMS['Alto'],LoA['Autonomo'])
 
 
@@ -159,4 +159,4 @@ def calculateAutonomy(myo_rms,joy_angular,weld_pos, myo_roll):
 
     return autonomy_level
 
-calculateAutonomy(50,-4.7, 0.931, -1.92)
+calculateAutonomy(180, -2, 0.8, -1)
