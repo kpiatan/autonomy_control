@@ -113,6 +113,10 @@ def dangCallback(data):
     d_yaw = data.z
 
     return
+
+def gestCallback(data):
+
+    return
     
 
 def talker():
@@ -143,6 +147,7 @@ def talker():
     rospy.Subscriber('joy/iniciar_dados', Int16, dadosCallback)
     rospy.Subscriber('/myo/rms', Float32, rmsCallback)
     rospy.Subscriber('/myo/delta_ang', Vector3, dangCallback)
+    rospy.Subscriber('/myo_raw/myo_gest', Vector3, gestCallback)    
     rospy.init_node('select_autonomy_node', anonymous=True)
     rate = rospy.Rate(100) # hz
 
