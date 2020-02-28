@@ -6,6 +6,7 @@ from nav_msgs.msg import Odometry
 from std_msgs.msg import Float64,Float32, Int16, UInt8
 from sensor_msgs.msg import Joy
 import tf
+from numpy import mean, sqrt, square, arange
 
 import random
 import time
@@ -35,6 +36,9 @@ joyX = 0 #vel linear lida do topico cmd_vel publicado pelo joystick
 joyZ = 0 #vel angular lida do topico cmd_vel publicado pelo joystick
 autX = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
 autZ = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
+
+iniciar_dados = 0 # rotina para mostrar dados na tela
+vetor_dados = [] # vetor que acumula os erros do cordao de solda
 
 autonomy_level = 1
 autonomy_level_int = 1
@@ -90,6 +94,12 @@ def joyCallback(data):
 
     return
 
+def dadosCallback(data):
+    global iniciar_dados
+    iniciar_dados = data.data
+
+    return
+
 def rmsCallback(data):
     global rms
     rms = data.data
@@ -115,8 +125,11 @@ def talker():
     global joyX, joyZ, autX, autZ
     global autonomy_level, autonomy_level_int, autonomy_level_int_ant
     global d_roll, d_pitch, d_yaw
+    global iniciar_dados
+    global vetor_dados
 
     fuzzy_autonomy.inicializaFuzzy()
+    
 
     pubAutonomy = rospy.Publisher('autonomy_level', Float32, queue_size=10)
     pubVel = rospy.Publisher('air1/cmd_vel',Twist,queue_size=10)
@@ -127,6 +140,7 @@ def talker():
     rospy.Subscriber('air1/odon', Odometry, odonCallback)
     rospy.Subscriber('air1/twist', TwistStamped, twistCallback)
     rospy.Subscriber('joy', Joy, joyCallback)
+    rospy.Subscriber('joy/iniciar_dados', Int16, dadosCallback)
     rospy.Subscriber('/myo/rms', Float32, rmsCallback)
     rospy.Subscriber('/myo/delta_ang', Vector3, dangCallback)
     rospy.init_node('select_autonomy_node', anonymous=True)
@@ -142,18 +156,13 @@ def talker():
             if tanque != -1:
                 sinal = ajusteTanque.determinarSinal(scan,tanque)
                 erro_x = ajusteTanque.calcularCentroSolda(sinal)
-                #pubErro.publish(erro_x)
                 erro_orientacao =  0
-                #print erro_x
-                #erroacumulado = erroacumulado + erro_x*erro_x
-                #print("ErroAcumulado:")
-                #print erroacumulado
-                #elapsed_time = time.time() - start_time
-                #print("Tempo:")
-                #print elapsed_time
-                #erro_por_tempo = math.sqrt(erroacumulado)/elapsed_time
-                #print("metrica:")
-                #print erro_por_tempo
+
+                if iniciar_dados == 1:
+                    vetor_dados.append(erro_x)
+                if iniciar_dados == 0:
+                    rms_vetor = sqrt(mean(square(vetor_dados)))
+                    print "RMS Dados:", rms_vetor
 
                 autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,theta,erro_x, d_roll)
                 #autonomy_level = 1 #teste
