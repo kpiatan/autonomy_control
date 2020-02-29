@@ -246,8 +246,10 @@ def listener():
                     # print erro_orientacao
                     # pubErro.publish(math.fabs(erro_orientacao))
                     msg = Twist()
-                    msg.angular.z= 1.25*vang
-                    msg.linear.x=0.1285*vlin
+                    #msg.angular.z= 1.25*vang
+                    #msg.linear.x=0.1285*vlin
+                    msg.angular.z= 1.15*vang
+                    msg.linear.x=0.1365*vlin
                     if espera_joy == 1:
                         msg.linear.x = 0
                         msg.angular.z = 0

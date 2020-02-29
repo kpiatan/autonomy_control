@@ -37,7 +37,7 @@ joyZ = 0 #vel angular lida do topico cmd_vel publicado pelo joystick
 autX = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
 autZ = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
 
-iniciar_dados = 0 # rotina para mostrar dados na tela
+iniciar_dados = 1 # rotina para mostrar dados na tela ... por 1 no modo autonomo e 0 manual
 vetor_dados = [] # vetor que acumula os erros do cordao de solda
 start_time = time.time()
 run_once = 0
@@ -178,12 +178,12 @@ def talker():
                     elapsed_time = time.time() - start_time
                     print "Erro RMS:", rms_vetor
                     print "Tempo transcorrido:", elapsed_time
-                    #print "Tamanho do vetor", rms_vetor.shape
+                    print "Tamanho do vetor", len(vetor_dados)
                     vetor_dados = []
                     run_once = 0
 
                 autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,theta,erro_x, d_roll)
-                autonomy_level = 1 #forcando o nivel de autonomia estatico
+                autonomy_level = 4 #forcando o nivel de autonomia estatico
                 pubAutonomy.publish(autonomy_level)
 
         msg_cmd_vel = Twist()
