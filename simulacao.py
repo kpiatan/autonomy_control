@@ -26,7 +26,7 @@ gravidade_z = 1
 
 start_time = time.time()
 
-lado = [2,1,2,1] # sequencia de acoes a serem seguidas em cruzamentos: 0 - reto / 1 - esquerda / 2 - direita
+lado = [2,1,2,2,1,1,2] # sequencia de acoes a serem seguidas em cruzamentos: 0 - reto / 1 - esquerda / 2 - direita
 lado_joy = 0 # lado vindo do joystick
 index_sequence = 0 # index_sequence que percorre o array 'lado'
 autonomy = 4 # 1 - manual, 2 - controle de vel linear, 3 - controle de direcao, 4 - autonomo
