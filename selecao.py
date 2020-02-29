@@ -170,6 +170,7 @@ def talker():
                 if iniciar_dados == 1:
                     vetor_dados.append(erro_x)
                     if run_once == 0:
+                        print "Iniciando medicao..."
                         start_time = time.time()
                         run_once = 1
                 if iniciar_dados == 0 and run_once == 1:
@@ -178,6 +179,7 @@ def talker():
                     print "Erro RMS:", rms_vetor
                     print "Tempo transcorrido:", elapsed_time
                     #print "Tamanho do vetor", rms_vetor.shape
+                    vetor_dados = []
                     run_once = 0
 
                 autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,theta,erro_x, d_roll)
