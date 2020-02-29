@@ -39,6 +39,8 @@ autZ = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
 
 iniciar_dados = 0 # rotina para mostrar dados na tela
 vetor_dados = [] # vetor que acumula os erros do cordao de solda
+start_time = time.time()
+run_once = 0
 
 autonomy_level = 1
 autonomy_level_int = 1
@@ -114,9 +116,9 @@ def dangCallback(data):
 
     return
 
-def gestCallback(data):
+#def gestCallback(data):
 
-    return
+#   return
     
 
 def talker():
@@ -131,6 +133,8 @@ def talker():
     global d_roll, d_pitch, d_yaw
     global iniciar_dados
     global vetor_dados
+    global start_time
+    global run_once
 
     fuzzy_autonomy.inicializaFuzzy()
     
@@ -147,7 +151,7 @@ def talker():
     rospy.Subscriber('joy/iniciar_dados', Int16, dadosCallback)
     rospy.Subscriber('/myo/rms', Float32, rmsCallback)
     rospy.Subscriber('/myo/delta_ang', Vector3, dangCallback)
-    rospy.Subscriber('/myo_raw/myo_gest', Vector3, gestCallback)    
+    #rospy.Subscriber('/myo_raw/myo_gest', Vector3, gestCallback)    
     rospy.init_node('select_autonomy_node', anonymous=True)
     rate = rospy.Rate(100) # hz
 
@@ -165,14 +169,20 @@ def talker():
 
                 if iniciar_dados == 1:
                     vetor_dados.append(erro_x)
-                if iniciar_dados == 0:
+                    if run_once == 0:
+                        start_time = time.time()
+                        run_once = 1
+                if iniciar_dados == 0 and run_once == 1:
                     rms_vetor = sqrt(mean(square(vetor_dados)))
-                    print "RMS Dados:", rms_vetor
+                    elapsed_time = time.time() - start_time
+                    print "Erro RMS:", rms_vetor
+                    print "Tempo transcorrido:", elapsed_time
+                    #print "Tamanho do vetor", rms_vetor.shape
+                    run_once = 0
 
                 autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,theta,erro_x, d_roll)
-                #autonomy_level = 1 #teste
+                autonomy_level = 1 #forcando o nivel de autonomia estatico
                 pubAutonomy.publish(autonomy_level)
-
 
         msg_cmd_vel = Twist()
 

@@ -119,7 +119,7 @@ def listener():
     rospy.Subscriber('air1/odon', Odometry, odonCallback)
     rospy.Subscriber('air1/twist', TwistStamped, twistCallback)
     rospy.Subscriber('joy', Joy, joyCallback)
-    rospy.Subscriber('autonomy_level', Int16, autonomyCallback)
+    rospy.Subscriber('autonomy_level', Float32, autonomyCallback)
 
     rate = rospy.Rate(1000)
     orie_desejada = 0
@@ -176,7 +176,7 @@ def listener():
                 # print scan.points
                 iMin,iMax,estado = ajusteTanque.calcularLimitesSolda(scan)
                 #ladoRotacao = random.randint(0,1)
-                if autonomy == 3:
+                if autonomy > 2 and autonomy <= 3:
                     lado[index_sequence] = lado_joy
                 ladoRotacao = lado[index_sequence]
                 print("estado:")
@@ -198,7 +198,7 @@ def listener():
 
                 # cruzamento em t
                 if estado == 0:
-                    if autonomy == 3:
+                    if autonomy > 2 and autonomy <= 3:
                         espera_joy = 1
                     if ladoRotacao == 2:
                         orie_desejada = orie_desejada - math.pi/2 # direita
@@ -207,14 +207,14 @@ def listener():
 
                 # reto ou curva a direita
                 if estado == 1:
-                    if autonomy == 3:
+                    if autonomy > 2 and autonomy <= 3:
                         espera_joy = 1
                     if ladoRotacao == 2:
                         orie_desejada = orie_desejada - math.pi/2
 
                 # reto ou curva a esquerda
                 if estado == 2:
-                    if autonomy == 3:
+                    if autonomy > 2 and autonomy <= 3:
                         espera_joy = 1
                     if ladoRotacao == 1:
                         orie_desejada = orie_desejada + math.pi/2
