@@ -168,6 +168,7 @@ def talker():
                 erro_orientacao =  0
 
                 if iniciar_dados == 1:
+                    #print "Erro:", erro_x
                     vetor_dados.append(erro_x)
                     if run_once == 0:
                         print "Iniciando medicao..."
@@ -176,9 +177,11 @@ def talker():
                 if iniciar_dados == 0 and run_once == 1:
                     rms_vetor = sqrt(mean(square(vetor_dados)))
                     elapsed_time = time.time() - start_time
-                    print "Erro RMS:", rms_vetor
+                    #print "Erro RMS:", rms_vetor
                     print "Tempo transcorrido:", elapsed_time
-                    print "Tamanho do vetor", len(vetor_dados)
+                    #print "Vetor dos erros:", vetor_dados
+                    #print '\n', '\n'
+                    print "Valor filtrado:", filter(lambda a: a != -1, vetor_dados)
                     vetor_dados = []
                     run_once = 0
 
