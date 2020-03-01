@@ -46,6 +46,7 @@ vetor_autonomy = []
 autonomy_level = 1
 autonomy_level_int = 1
 autonomy_level_int_ant = 1
+transicoes = 0
 
 def laserCallback(data):
     global d
@@ -137,6 +138,7 @@ def talker():
     global start_time
     global run_once
     global vetor_autonomy
+    global transicoes
 
     fuzzy_autonomy.inicializaFuzzy()
     
@@ -182,10 +184,11 @@ def talker():
                     elapsed_time = time.time() - start_time
                     #print "Erro RMS:", rms_vetor
                     print "Tempo transcorrido:", elapsed_time
+                    print "Transicoes:", transicoes
                     #print "Vetor dos erros:", vetor_dados
-                    #print '\n', '\n'
-                    print "Valor filtrado:", filter(lambda a: a != -1, vetor_dados)
-                    print "Vetor de autonomia:", vetor_autonomy
+                    print "VetorFiltrado = ", filter(lambda a: a != -1, vetor_dados)
+                    print '\n'
+                    print "VetorAutonomia = ", vetor_autonomy
                     vetor_dados = []
                     run_once = 0
 
@@ -234,12 +237,13 @@ def talker():
         elif autonomy_level > 3:
             autonomy_level_int = 4
 
-        if autonomy_level_int > autonomy_level_int_ant:
-            pubHap.publish(2)
-        elif autonomy_level_int < autonomy_level_int_ant:
-            pubHap.publish(1)
-        else:
-            pubHap.publish(0)
+        if autonomy_level_int != autonomy_level_int_ant:
+            transicoes = transicoes+1
+        #    pubHap.publish(2)
+        #elif autonomy_level_int < autonomy_level_int_ant:
+        #    pubHap.publish(1)
+        #else:
+        #    pubHap.publish(0)
 
         rate.sleep()
 
