@@ -37,11 +37,12 @@ joyZ = 0 #vel angular lida do topico cmd_vel publicado pelo joystick
 autX = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
 autZ = 0 #vel linear lida do topico cmd_vel publicado pelo simulacao.py
 
-iniciar_dados = 1 # rotina para mostrar dados na tela ... por 1 no modo autonomo e 0 manual
+iniciar_dados = 0 # rotina para mostrar dados na tela ... por 1 no modo autonomo e 0 manual
 vetor_dados = [] # vetor que acumula os erros do cordao de solda
 start_time = time.time()
 run_once = 0
 
+vetor_autonomy = []
 autonomy_level = 1
 autonomy_level_int = 1
 autonomy_level_int_ant = 1
@@ -135,6 +136,7 @@ def talker():
     global vetor_dados
     global start_time
     global run_once
+    global vetor_autonomy
 
     fuzzy_autonomy.inicializaFuzzy()
     
@@ -170,6 +172,7 @@ def talker():
                 if iniciar_dados == 1:
                     #print "Erro:", erro_x
                     vetor_dados.append(erro_x)
+                    vetor_autonomy.append(autonomy_level)
                     if run_once == 0:
                         print "Iniciando medicao..."
                         start_time = time.time()
@@ -182,11 +185,13 @@ def talker():
                     #print "Vetor dos erros:", vetor_dados
                     #print '\n', '\n'
                     print "Valor filtrado:", filter(lambda a: a != -1, vetor_dados)
+                    print "Vetor de autonomia:", vetor_autonomy
                     vetor_dados = []
                     run_once = 0
 
                 autonomy_level=fuzzy_autonomy.calculateAutonomy(rms,theta,erro_x, d_roll)
-                autonomy_level = 4 #forcando o nivel de autonomia estatico
+                #autonomy_level = 4 #forcando o nivel de autonomia estatico
+                print "Nivel de autonomia:",autonomy_level
                 pubAutonomy.publish(autonomy_level)
 
         msg_cmd_vel = Twist()

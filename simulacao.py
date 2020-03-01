@@ -176,8 +176,8 @@ def listener():
                 # print scan.points
                 iMin,iMax,estado = ajusteTanque.calcularLimitesSolda(scan)
                 #ladoRotacao = random.randint(0,1)
-                if autonomy > 2 and autonomy <= 3:
-                    lado[index_sequence] = lado_joy
+                #if autonomy > 2 and autonomy <= 3:
+                #    lado[index_sequence] = lado_joy
                 ladoRotacao = lado[index_sequence]
                 print("estado:")
                 print estado
@@ -198,8 +198,8 @@ def listener():
 
                 # cruzamento em t
                 if estado == 0:
-                    if autonomy > 2 and autonomy <= 3:
-                        espera_joy = 1
+                    #if autonomy > 2 and autonomy <= 3:
+                    #    espera_joy = 1
                     if ladoRotacao == 2:
                         orie_desejada = orie_desejada - math.pi/2 # direita
                     elif ladoRotacao == 1:
@@ -207,15 +207,15 @@ def listener():
 
                 # reto ou curva a direita
                 if estado == 1:
-                    if autonomy > 2 and autonomy <= 3:
-                        espera_joy = 1
+                    #if autonomy > 2 and autonomy <= 3:
+                    #    espera_joy = 1
                     if ladoRotacao == 2:
                         orie_desejada = orie_desejada - math.pi/2
 
                 # reto ou curva a esquerda
                 if estado == 2:
-                    if autonomy > 2 and autonomy <= 3:
-                        espera_joy = 1
+                    #if autonomy > 2 and autonomy <= 3:
+                    #    espera_joy = 1
                     if ladoRotacao == 1:
                         orie_desejada = orie_desejada + math.pi/2
 
