@@ -119,7 +119,8 @@ def dangCallback(data):
     return
 
 #def gestCallback(data):
-
+#    global gesto
+#    data
 #   return
     
 
